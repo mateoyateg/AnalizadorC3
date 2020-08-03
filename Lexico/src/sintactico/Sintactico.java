@@ -52,10 +52,10 @@ public class Sintactico {
                     select(cadenaSeparada);
                     break;
                 case "CREATE":
-                    create(cadenaSeparada);
+                    //create(cadenaSeparada);
                     break;
                 case "CREATE PROCEDURE":
-                    JOptionPane.showMessageDialog(null, lineaActual + "Expresion valida");
+                    createProcedure(cadenaSeparada);
                     break;
                 case "BEGIN":
                     JOptionPane.showMessageDialog(null, lineaActual + "Expresion valida");
@@ -72,10 +72,43 @@ public class Sintactico {
         }
     }
 
+    public void createProcedure(String[] cadenaSeparada){
+        boolean error = false;
+        int i = 0;
+        if(cadenaSeparada.length > 2 && verificarNombre(cadenaSeparada[2])) {
+            if (cadenaSeparada.length > 3) {           
+                if(cadenaSeparada[3].startsWith("@")) {
+                    if(cadenaSeparada.length > 4) {
+                        do{                      
+                            if(i == 0) {
+                                i= 4;                                                                                 
+                            } 
+                            error = !verficarTipos(cadenaSeparada[i]);
+
+                            i = i+2; 
+
+                        }while(!error && i < cadenaSeparada.length);
+                        if(error) {
+                            JOptionPane.showMessageDialog(null, lineaActual + "Expresión errada: Hay algun parametro que no le estas asignando el tipo correcto");
+
+                        } else {
+                            JOptionPane.showMessageDialog(null, lineaActual + "Expresion valida");
+                        }
+
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, lineaActual + "No contiene el token @ para referenciar el/los parametros");
+                }
+            }                
+        } else {
+            JOptionPane.showMessageDialog(null, lineaActual + "El nombre de la funcion contiene nombres reservados");
+        }
+       
+    }
     public void select(String[] cadenaSeparada) {
         String valorTabla;
         int valorFrom = 0;
-
+        int j = 0;
         Boolean error = false;
         if (cadenaSeparada.length > 1 && cadenaSeparada[0].equals("SELECT")) {
             System.out.println(lineaActual + "El nombre de la sentencia es correcto y hay algo después");
@@ -87,11 +120,15 @@ public class Sintactico {
             if (cadenaSeparada[valorFrom].equals("FROM") && cadenaSeparada.length > valorFrom) {
                 if (cadenaSeparada.length > valorFrom + 1 && verificarNombre(cadenaSeparada[valorFrom + 1])) {
                     valorTabla = cadenaSeparada[valorFrom + 1];
-                    for (int j = 1; j < valorFrom; j++) {
-                        if (!verificarCamposTabla(cadenaSeparada[j], valorTabla)) {
-                            error = true;
+                    do{
+                        if(j == 0) {
+                            j = 1;
                         }
-                    }
+                        System.out.println("el valor del campo "+ cadenaSeparada[j]);
+                        error = !verificarCamposTabla(cadenaSeparada[j], valorTabla);
+                        j++;
+                    }while(!error && j<valorFrom);
+                    
                     if (!error || cadenaSeparada[valorFrom - 1].equals("*")) {
 
                         if (cadenaSeparada.length > valorFrom + 2) {
@@ -136,20 +173,32 @@ public class Sintactico {
 
         }
     }
-
+    
     public void create(String[] cadenaSeparada) {
-        int valorCierre;
+        boolean error = false;
+        int i = 0;
         if (cadenaSeparada.length > 1 && cadenaSeparada[0].equals("CREATE")) {
             if (cadenaSeparada[1].equals("TABLE")) {
                 if (cadenaSeparada.length > 2 && verificarNombre(cadenaSeparada[2])) {
                     if (cadenaSeparada.length > 3 && cadenaSeparada[3].startsWith("{")) {
+                        do{                      
+                            if(i == 0) {
+                                i= 3;                                                                                 
+                            } 
+                            error = !verficarTipos(cadenaSeparada[i]);
 
-                        if (verficarDeclaraciones(cadenaSeparada)) {
-                            JOptionPane.showMessageDialog(null, lineaActual +"Expresion valida");
+                            i = i+2; 
+
+                        }while(!error && i < cadenaSeparada.length);
+                        if(error) {
+                            JOptionPane.showMessageDialog(null, lineaActual + "Expresión errada: Hay algun parametro que no le estas asignando el tipo correcto");
+
+                        } else {
+                            JOptionPane.showMessageDialog(null, lineaActual + "Expresion valida");
                         }
+                        
                     } else {
                         JOptionPane.showMessageDialog(null, lineaActual +"No ha declarado bien los parametros");
-
                     }
 
                 } else {
@@ -165,43 +214,20 @@ public class Sintactico {
 
         }
     }
-
-    public boolean verficarDeclaraciones(String[] cadena) {
-        String cad = cadena[3];
-        String[] nueva = new String[]{};
-        String[] otra = new String[]{};
-        Boolean condicion = false;
-        Boolean otraCondicion = false;
-        for (int x = 4; x < cadena.length; x++) {
-            cad += " " + cadena[x];
+    
+    public boolean verficarTipos(String tipo) {
+        tipo = tipo.toUpperCase();
+        Pattern pat = Pattern.compile("BIT|TINYINT|SMALLINT|BIGINT|DECIMAL|NUMERIC|FLOAT|REAL|DATE|TIME|DATETIME|TIMESTAMP|YEAR|CHAR|VARCHAR|TEXT|NCHAR|NVARCHAR|NTEXT|BINARY|VARBINARY|IMAGE|CLOB|JSON");
+        Matcher mat = pat.matcher(tipo);
+        
+        if(mat.find()) {
+            System.out.println("entro");
+            return true;
+        } else {
+                        System.out.println("entro falso");
+            return false;
         }
-        String requiredString = cad.substring(cad.indexOf("{") + 1, cad.indexOf("}"));
-        if (requiredString.contains(";")) {
-            condicion = false;
-        }
-        nueva = requiredString.split(",");
-
-        for (int y = 0; y < nueva.length; y++) {
-            otra = nueva[y].split(" ");
-            System.out.println(otra.length);
-            if (otra.length < 2) {
-                System.out.println(lineaActual +"no contiene una definicion de variable");
-                condicion = false;
-            } else {
-
-                //Pattern pat = Pattern.compile("CHAR|BINARY|BOOL|SMALLINT|INTEGER|FLOAT");
-                //Matcher mat = pat.matcher(otra[1]);
-                System.out.println(otra[1]);
-                if (otra[1].contains("CHAR")) {
-                    System.out.println(lineaActual +" contiene tipos de variable");
-                    otraCondicion = true;
-                } else {
-                    System.out.println(lineaActual +"no contiene tipos de variable");
-                    otraCondicion = false;
-                }
-            }
-        }
-        return !condicion ? condicion : otraCondicion;
+        
     }
 
     public void update(String[] cadenaSeparada) {
@@ -359,31 +385,30 @@ public class Sintactico {
     }
 
     public boolean verificarCamposTabla(String valores, String tabla) {
-        System.out.println(valores);
-
+        
         String[] columnas = new String[]{};
         columnas = valores.split("\\,");
         String[] nombreTabla = columnas;
         Boolean error = false;
-
+        int j = 0;
         for (int i = 0; i < columnas.length; i++) {
-            System.out.println(columnas[i]);
             nombreTabla[i] = columnas[i].split("\\.")[0];
         }
 
         if (nombreTabla.length < columnas.length) {
+            System.out.println("error 1");
             return false;
         } else {
-            for (int j = 0; j < nombreTabla.length; j++) {
-                System.out.println(nombreTabla[j]);
-
+            do {
+                System.out.println("este es el nombre de la tabla del campo 1 "+nombreTabla[j]);
                 if (!nombreTabla[j].equals(tabla)) {
                     error = true;
                 }
-
-            }
+                j++;
+            }while(!error && j<nombreTabla.length);
+            
             System.out.println(error);
-            return error ? false : true;
+            return !error;
         }
 
     }
@@ -466,7 +491,7 @@ public class Sintactico {
             }
 
         } else {
-            System.out.println(lineaActual +"ERROR: " + tbName + " contiene palabras reservadas");
+            System.out.println(lineaActual +"ERROR: " + tbName + " contiene palabras reservadas o contiene caracteres especiales");
             return false;
         }
 
