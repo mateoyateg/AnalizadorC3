@@ -1,5 +1,6 @@
 CREATE PROCEDURE funcion()
 BEGIN
+UPDATE Customers SET ContactName='AlfredSchmidt',City='Frankfurt' WHERE CustomerID=1;
 INSERT INTO Customers (CustomerName,City,Country) VALUES ('Cardinal','Stavanger','Norway');
 DELETE FROM Customers WHERE CustomerName='Alfreds Futterkiste';
 END

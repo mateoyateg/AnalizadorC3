@@ -58,8 +58,10 @@ public class Sintactico {
                     JOptionPane.showMessageDialog(null, lineaActual + "Expresion valida");
                     break;
                 case "BEGIN":
+                    JOptionPane.showMessageDialog(null, lineaActual + "Expresion valida");
                     break;
                 case "END":
+                    JOptionPane.showMessageDialog(null, lineaActual + "Expresion valida");
                     break;
                 default:
                     JOptionPane.showMessageDialog(null, lineaActual + "Expresión errada: La primera palabra no es un statement");
