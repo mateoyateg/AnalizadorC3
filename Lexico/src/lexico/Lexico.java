@@ -11,13 +11,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -55,7 +53,7 @@ public class Lexico extends JFrame implements ActionListener{
         
         Lexico lex = new Lexico();
         lex.setBounds(0, 0, 970, 500);
-        lex.setTitle("Analizador Léxico y Sintáctico de Procedimientos Almacenados SQL - Ciencias III");
+        lex.setTitle("Analizador Léxico, Sintáctico y Semantico de Procedimientos Almacenados SQL - Ciencias III");
         lex.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         lex.setVisible(true);   
         
