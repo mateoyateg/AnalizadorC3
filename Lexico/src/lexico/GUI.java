@@ -16,12 +16,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java_cup.runtime.Symbol;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -232,7 +234,7 @@ public class GUI implements ActionListener{
     
     public void crearAnalizadorSintactico() throws Exception{
         String ruta2 = "src/lexico/LexerCup.flex";
-        String[] rutaS = {"-parser", "Sintax", "D:/Git/SintacticoYLexico/Lexico/src/lexico/Sintax.cup"};
+        String[] rutaS = {"-parser", "Sintax", "src/lexico/Sintax.cup"};
         generar(ruta2, rutaS);
     }
     
@@ -241,7 +243,7 @@ public class GUI implements ActionListener{
         generarLexer(ruta);
     }
     
-    public static void generar(String ruta2, String[] rutaS) throws IOException, Exception{
+    public void generar(String ruta2, String[] rutaS) throws IOException, Exception{
 
         File archivo;
         archivo = new File(ruta2);
@@ -271,12 +273,28 @@ public class GUI implements ActionListener{
         
     }
     
+    public void analizar(Sintax s, int linea){
+        
+        try {
+            s.parse();
+            System.out.println("Analisis realizado correctamente");
+            resultadoSintactico += "Analisis realizado correctamente \n";
+
+        } catch (Exception ex) {
+            Symbol sym = s.getS();
+            System.out.println("Error de sintaxis. Linea: " + (linea + 1) + " Columna: " + (sym.left + 1) + ", Texto: \"" + sym.value + "\"");
+            resultadoSintactico += "Error de sintaxis. Linea: " + (linea + 1) + " Columna: " + (sym.left + 1) + ", Texto: \"" + sym.value + "\"\n";
+
+        }
+        
+    }
     
     
     @Override
     public void actionPerformed(ActionEvent e) {
         
         if (e.getSource() == btCargarArchivo) {
+            System.out.println("---------- BOTON PRESIONADO ------------");
             //Limpiar los paneles y el resultado del sintactico
             taProcedimiento.removeAll();
             taLexico.removeAll();
@@ -287,6 +305,17 @@ public class GUI implements ActionListener{
             //Almacenar el procedimiento almacenado en un text area
             procedimientoAlmacenado = new ArrayList<String>();
             cargarArchivo();
+            
+            
+            
+            //Analizador sintactico
+            for(int i=0; i < procedimientoAlmacenado.size(); i++){
+                System.out.println("Linea por analizar: " + procedimientoAlmacenado.get(i) + ", numero de linea: " + i);
+                Sintax s = new Sintax(new lexico.LexerCup(new StringReader(procedimientoAlmacenado.get(i))));
+                analizar(s,i);
+            }
+            
+            taSintactico.setText(resultadoSintactico);
             
             /*
 
@@ -345,7 +374,6 @@ public class GUI implements ActionListener{
                         }
 
                         //Pintar el procedimiento almacenado en el panel de la derecha
-                        System.out.println(procedimientoTexto);
                         taProcedimiento.setText(procedimientoTexto);
 
                         return;
@@ -362,7 +390,6 @@ public class GUI implements ActionListener{
                         case Tipo: case Punto: case Coma:
                             
                             resultado += "\"" + lexer.lecturaLexica + "\" : es un " + tokens + "\n";
-                            System.out.println(lexer.lecturaLexica);
                             break;
                             
                         default:
