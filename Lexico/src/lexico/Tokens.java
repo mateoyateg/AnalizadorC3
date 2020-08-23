@@ -26,5 +26,9 @@ public enum Tokens {
     Identificador,
     Delimitador,
     Numero,
+    Arroba,
+    Tipo,
+    Punto,
+    Coma,
     ERROR
 }
