@@ -277,7 +277,7 @@ public class GUI implements ActionListener{
         
         try {
             s.parse();
-            System.out.println("Analisis realizado correctamente");
+            System.out.println("Linea: " + linea + ": Analisis realizado correctamente");
             resultadoSintactico += "Analisis realizado correctamente \n";
 
         } catch (Exception ex) {

@@ -103,7 +103,10 @@ espacio=[ ,\t,\r,\n]+
 {L}({L}|{D})* {return new Symbol(sym.Identificador, yychar, yyline, yytext());}
 
 /* Datos */
-{L}({L}|{D})* {return new Symbol(sym.Datos, yychar, yyline, yytext());}
+[(]+([']*[\w]+[']*[,]*)+[^,][)]+ {return new Symbol(sym.Datos, yychar, yyline, yytext());}
+
+/* Campo de la Tabla */
+[(]+([\w]+[,]*)+[^,][)]+ {return new Symbol(sym.CamposTabla, yychar, yyline, yytext());}
 
 /* Numero */
 ("(-"{D}+")")|{D}+ {return new Symbol(sym.Numero, yychar, yyline, yytext());}

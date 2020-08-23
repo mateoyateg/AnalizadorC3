@@ -2,7 +2,7 @@ CREATE PROCEDURE function @ContactName nvarchar(30), @City nvarchar(10)
 BEGIN
 CREATE TABLE Customers {CustomerId BigInt, ContactName varchar(30), City varchar(30)};
 UPDATE Customers ContactName='AlfredSchmidt',City='Frankfurt' WHERE CustomerID=1;
-INSERT INTO Customers (CustomerName,City,Country) VALUES ('Cardinal','Stavanger','Norway');
+INSERT INTO Customers (CustomerName, CustomerId) VALUES ('Cardinal','Comilla');
 DELETE FROM Customers WHERE CustomerName='Alfreds Futterkiste';
 SELECT Customers.A FROM Customers WHERE Customers.Id = 1;
 END
