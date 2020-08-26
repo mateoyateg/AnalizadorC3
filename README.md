@@ -5,8 +5,8 @@ Analizador lexico que transforma sentencias en tokens con su respectiva denomina
 *Nota: debe cargar el JFlex, JCup y JCup-11-a que se encuentra alojado en la carpeta raiz del proyecto.*
 
 ## Estudiantes:
-- Daniela Martinez - 20171020006
-- Mateo Yate - 20171020087
-- Daniel Roa - 20171020077
+- Daniela Alexandra Martinez - 20171020006
+- Mateo Yate Gonzalez - 20171020087
+- Daniel A. Roa Palacios - 20171020077
 
 **Universidad Distrital Francisco Jose de Caldas - Ciencias de la Computacion III - Profesor: Christian J. Acosta Cipagauta.**
