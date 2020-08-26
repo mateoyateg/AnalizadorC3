@@ -16,11 +16,14 @@ import javax.swing.JOptionPane;
 public class Sintactico {
     private int numeroColumnasActual;
     private String lineaActual;
-    
+    public String resultado = "";
+    int columna = 0;
     
     public void analizarLinea(String linea, int numeroDeLinea) {
         
         System.out.println("Metodo de analizar linea del Sintactico");
+        
+        columna = 0;
         
         if (linea.length() != 0) {
             
@@ -40,35 +43,43 @@ public class Sintactico {
 
             switch (opc) {
                 case "INSERT":
+                    columna = columna + opc.length() + 1;
                     insert(cadenaSeparada);
                     break;
                 case "DELETE":
+                    columna = columna + opc.length() + 1;
                     delete(cadenaSeparada);
                     break;
                 case "UPDATE":
+                    columna = columna + opc.length() + 1;
                     update(cadenaSeparada);
                     break;
                 case "SELECT":
+                    columna = columna + opc.length() + 1;
                     select(cadenaSeparada);
                     break;
                 case "CREATE":
-                    //create(cadenaSeparada);
+                    columna = columna + opc.length() + 1;
+                    create(cadenaSeparada);
                     break;
                 case "CREATE PROCEDURE":
+                    columna = columna + opc.length() + 1;
                     createProcedure(cadenaSeparada);
                     break;
                 case "BEGIN":
-                    JOptionPane.showMessageDialog(null, lineaActual + "Expresion valida");
+                    resultado += lineaActual + " La expresion es valida \n";
                     break;
                 case "END":
-                    JOptionPane.showMessageDialog(null, lineaActual + "Expresion valida");
+                    resultado += lineaActual + " La expresion es valida \n";
                     break;
                 default:
-                    JOptionPane.showMessageDialog(null, lineaActual + "Expresión errada: La primera palabra no es un statement");
+                    resultado += lineaActual + " Columna: " + columna + " '" + opc + "'" +  ", Expresión errada: La primera palabra no es un statement \n";
             }
 
         } else {
-            JOptionPane.showMessageDialog(null, lineaActual + "La linea está vacia");
+
+            resultado += "Linea " + Integer.toString(numeroDeLinea) + ": " + "La linea está vacia \n";
+
         }
     }
 
@@ -76,8 +87,10 @@ public class Sintactico {
         boolean error = false;
         int i = 0;
         if(cadenaSeparada.length > 2 && verificarNombre(cadenaSeparada[2])) {
+            columna = columna = columna + cadenaSeparada[2].length() + 1;
             if (cadenaSeparada.length > 3) {           
                 if(cadenaSeparada[3].startsWith("@")) {
+                    columna = columna = columna + cadenaSeparada[3].length() + 1;
                     if(cadenaSeparada.length > 4) {
                         do{                      
                             if(i == 0) {
@@ -89,19 +102,22 @@ public class Sintactico {
 
                         }while(!error && i < cadenaSeparada.length);
                         if(error) {
-                            JOptionPane.showMessageDialog(null, lineaActual + "Expresión errada: Hay algun parametro que no le estas asignando el tipo correcto");
-
+                            
+                            resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[3] + "'" +  ", Expresión errada: Hay algun parametro que no le estas asignando el tipo correcto \n";
+            
                         } else {
-                            JOptionPane.showMessageDialog(null, lineaActual + "Expresion valida");
+                            resultado += lineaActual + " La expresion es valida \n";
                         }
 
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, lineaActual + "No contiene el token @ para referenciar el/los parametros");
+                    resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[3] + "'" +  ", No contiene el token @ para referenciar el/los parametros \n";
                 }
             }                
         } else {
-            JOptionPane.showMessageDialog(null, lineaActual + "El nombre de la funcion contiene nombres reservados");
+
+            resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[2] + "'" +  ", El nombre de la funcion contiene nombres reservados \n";
+                
         }
        
     }
@@ -118,7 +134,13 @@ public class Sintactico {
                 }
             }
             if (cadenaSeparada[valorFrom].equals("FROM") && cadenaSeparada.length > valorFrom) {
+                
+                columna = columna = columna + cadenaSeparada[valorFrom].length() + 1;
+                
                 if (cadenaSeparada.length > valorFrom + 1 && verificarNombre(cadenaSeparada[valorFrom + 1])) {
+                    
+                    columna = columna = columna + cadenaSeparada[valorFrom + 1].length() + 1;
+                    
                     valorTabla = cadenaSeparada[valorFrom + 1];
                     do{
                         if(j == 0) {
@@ -131,45 +153,63 @@ public class Sintactico {
                     
                     if (!error || cadenaSeparada[valorFrom - 1].equals("*")) {
 
+                        columna = columna = columna + cadenaSeparada[valorFrom].length() + 1;
+                        
                         if (cadenaSeparada.length > valorFrom + 2) {
                             if (cadenaSeparada[valorFrom + 2].equals("WHERE")) {
+                                
+                                columna = columna = columna + cadenaSeparada[valorFrom + 2].length() + 1;
+                                
                                 if (cadenaSeparada.length > valorFrom + 3) {
                                     if (verificarCamposTabla(cadenaSeparada[valorFrom + 3], valorTabla)) {
+                                        
+                                        columna = columna = columna + cadenaSeparada[valorFrom + 3].length() + 1;
+                                        
                                         if (cadenaSeparada.length > valorFrom + 4 && cadenaSeparada[valorFrom + 4].equals("=")) {
+                                            
+                                            columna = columna = columna + cadenaSeparada[valorFrom + 4].length() + 1;
+                                            
                                             if (cadenaSeparada.length > valorFrom + 5 && verificarNombre(cadenaSeparada[valorFrom + 5])) {
-                                                JOptionPane.showMessageDialog(null, lineaActual +"Expresion valida ");
+                                                                                            
+                                                resultado += lineaActual + " La expresion es valida \n";
+                                                
                                             } else {
-                                                JOptionPane.showMessageDialog(null, lineaActual +"Falta valor de condicion");
+                                                resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[valorFrom + 5] + "'" + ", Falta valor de condicion \n";             
                                             }
                                         } else {
-                                            JOptionPane.showMessageDialog(null,lineaActual + "Falta operador de condicion");
+
+                                            resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[valorFrom + 4] + "'" + ", Falta operador de condicion \n";
 
                                         }
                                     } else {
-                                        JOptionPane.showMessageDialog(null,lineaActual + "No hay referencia a la tabla a consultar");
+                                        
+                                        resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[valorFrom + 3] + "'" + ", No hay referencia a la tabla a consultar \n";
+
                                     }
 
                                 } else {
-                                    JOptionPane.showMessageDialog(null, lineaActual +"Falta condicion");
+                                    resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[valorFrom + 2] + "'" + ", Falta condicion \n";
+
                                 }
                             } else {
-                                JOptionPane.showMessageDialog(null,lineaActual + "Sentencia erronea..Estas intentado escribir WHERE?");
+                                resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[valorFrom + 2] + "'" + ", Sentencia erronea..¿Estas intentado escribir WHERE? \n";
                             }
                         } else {
-                            JOptionPane.showMessageDialog(null,lineaActual + "Expresion valida ");
+                            resultado += lineaActual + " La expresion es valida \n";
                         }
                     } else {
-                        JOptionPane.showMessageDialog(null,lineaActual + "Mala sintaxis de columnas requeridas ");
+                        resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[valorFrom - 1] + "'" + ", Mala sintaxis de columnas requeridas \n";
+                            
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null,lineaActual + "Sentencia reservada ");
-
+                    resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[valorFrom + 1] + "'" + ", Sentencia reservada \n";
+                        
                 }
             }
 
         } else {
 
-            JOptionPane.showMessageDialog(null,lineaActual + "Solo hay una palabra reservada, continue con la expresion ");
+            resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[0] + "'" + ", Solo hay una palabra reservada, continue con la expresion \n";
 
         }
     }
@@ -179,8 +219,11 @@ public class Sintactico {
         int i = 0;
         if (cadenaSeparada.length > 1 && cadenaSeparada[0].equals("CREATE")) {
             if (cadenaSeparada[1].equals("TABLE")) {
+                columna = columna = columna + cadenaSeparada[1].length() + 1;
                 if (cadenaSeparada.length > 2 && verificarNombre(cadenaSeparada[2])) {
+                    columna = columna = columna + cadenaSeparada[2].length() + 1;
                     if (cadenaSeparada.length > 3 && cadenaSeparada[3].startsWith("{")) {
+                        
                         do{                      
                             if(i == 0) {
                                 i= 3;                                                                                 
@@ -191,26 +234,28 @@ public class Sintactico {
 
                         }while(!error && i < cadenaSeparada.length);
                         if(error) {
-                            JOptionPane.showMessageDialog(null, lineaActual + "Expresión errada: Hay algun parametro que no le estas asignando el tipo correcto");
+                            resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[3] + "'" + ", Expresión errada: Hay algun parametro que no le estas asignando el tipo correcto \n";
 
                         } else {
-                            JOptionPane.showMessageDialog(null, lineaActual + "Expresion valida");
+                            resultado += lineaActual + " La expresion es valida \n";
                         }
                         
                     } else {
-                        JOptionPane.showMessageDialog(null, lineaActual +"No ha declarado bien los parametros");
+                        resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[3] + "'" + ", No ha declarado bien los parametros \n";
+
                     }
 
                 } else {
-                    JOptionPane.showMessageDialog(null,lineaActual + "Palabra reservada ");
+                    resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[2] + "'" + ", Palabra reservada \n";
 
                 }
             } else {
-                JOptionPane.showMessageDialog(null,lineaActual + "No contiene la palabra TABLA ");
+
+                resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[1] + "'" + ", No contiene la palabra TABLE \n";
 
             }
         } else {
-            JOptionPane.showMessageDialog(null,lineaActual + "Solo hay una palabra reservada, continue con la expresion ");
+            resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[0] + "'" + ", Solo hay una palabra reservada, continue con la expresion \n";
 
         }
     }
@@ -232,15 +277,19 @@ public class Sintactico {
 
     public void update(String[] cadenaSeparada) {
         if (verificarNombre(cadenaSeparada[1]) && cadenaSeparada.length > 2) {
+            columna = columna = columna + cadenaSeparada[1].length() + 1;
             System.out.println(lineaActual +"El nombre de la tabla es correcto y hay algo después");
 
             if (cadenaSeparada[2].equals("SET") && cadenaSeparada.length > 3) {
+                columna = columna = columna + cadenaSeparada[2].length() + 1;
                 System.out.println(lineaActual +"La expresión contiene SET y hay algo después");
 
                 if (verificarIngresos(cadenaSeparada[3]) && cadenaSeparada.length > 4) {
+                    columna = columna = columna + cadenaSeparada[3].length() + 1;
                     System.out.println(lineaActual +"Los ingresos estan bien escritos");
 
                     if (cadenaSeparada[4].equals("WHERE") && cadenaSeparada.length > 4) {
+                        columna = columna = columna + cadenaSeparada[4].length() + 1;
                         System.out.println(lineaActual +"La expresión contiene WHERE y hay algo después");
 
                         if (cadenaSeparada.length > 6) {
@@ -248,100 +297,136 @@ public class Sintactico {
                             System.out.println(lineaActual +"Concatene YEI");
                         }
 
-                        if (verificarCondicion(cadenaSeparada[5])) {
+                        if (verificarCondicion(cadenaSeparada[5]) && cadenaSeparada[5].contains(";")) {
+                            columna = columna = columna + cadenaSeparada[5].length() + 1;
                             System.out.println(lineaActual +"La expresion es valida");
-                            JOptionPane.showMessageDialog(null,lineaActual + "Expresion VALIDA");
+                            resultado += lineaActual + " La expresion es valida \n";
                         } else {
-                            JOptionPane.showMessageDialog(null,lineaActual + "La condicion NO ES VALIDA");
+
+                            resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[5] + "'" + ", La condicion NO ES VALIDA \n";
+
                         }
 
                     } else {
-                        JOptionPane.showMessageDialog(null,lineaActual + "La expresion no contiene WHERE o no tiene nada despues de este");
-                    }
+                        
+                        resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[4] + "'" + ", La expresion no contiene WHERE o no tiene nada despues de este \n";
 
-                } else {
-                    JOptionPane.showMessageDialog(null,lineaActual + "Expresion invalida por condiciones");
+                        }
+
+                } else if(verificarIngresos(cadenaSeparada[3]) && cadenaSeparada.length == 4 && cadenaSeparada[3].contains(";")){
+                
+                    System.out.println(lineaActual +"La expresion es valida");
+                    resultado += lineaActual + " La expresion es valida \n";
+                    
+                } else {                    
+                    resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[3] + "'" + ", Expresion invalida por condiciones \n";
                 }
 
             } else {
-                JOptionPane.showMessageDialog(null,lineaActual + "Expresion sin un SET");
+                resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[2] + "'" + ", Expresion sin un SET \n";   
             }
         } else {
-            JOptionPane.showMessageDialog(null,lineaActual + "Expresion errada en el nombre de la tabla");
+            resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[1] + "'" + ", Expresion errada en el nombre de la tabla \n";             
         }
     }
 
     public void insert(String[] cadenaSeparada) {
-
+        
         if (cadenaSeparada[1].equals("INTO") && cadenaSeparada.length > 2) {
             System.out.println(lineaActual +"La expresión contiene INTO y hay algo después");
-
+            columna = columna = columna + cadenaSeparada[1].length() + 1;
+            
             if (verificarNombre(cadenaSeparada[2]) && cadenaSeparada.length > 3) {
                 System.out.println(lineaActual +"El nombre de la tabla es correcto y hay algo después");
-
-                if (verificarColumnas(cadenaSeparada[3]) && cadenaSeparada.length > 4) {
+                columna = columna = columna + cadenaSeparada[2].length() + 1;
+                
+                if (verificarColumnas(cadenaSeparada[3]) && cadenaSeparada.length > 4 && !cadenaSeparada[3].endsWith("VALUES")) {
                     System.out.println(lineaActual +"Las columnas son correctas y hay algo después");
-
+                    columna = columna = columna + cadenaSeparada[3].length() + 1;
+                    
                     if (cadenaSeparada[4].equals("VALUES") && cadenaSeparada.length > 5) {
                         System.out.println(lineaActual +"La expresión contiene VALUES y hay algo después");
-
-                        if (verificarValores(cadenaSeparada[5])) {
+                        columna = columna = columna + cadenaSeparada[4].length() + 1;
+                        
+                        if (verificarValores(cadenaSeparada[5]) && cadenaSeparada[5].contains(";")) {
                             System.out.println(lineaActual +"La expresion es valida");
-                            JOptionPane.showMessageDialog(null,lineaActual + "Expresion VALIDA");
+                            columna = columna = columna + cadenaSeparada[5].length() + 1;
+                            resultado += lineaActual + " La expresion es valida \n";
                         } else {
-                            JOptionPane.showMessageDialog(null, lineaActual +"Expresion errada en la expresion de los valores a insertar");
+                            resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[5] + "'" + ", Expresion errada en la expresion de los valores a insertar \n";
                         }
 
                     } else {
-                        JOptionPane.showMessageDialog(null, lineaActual +"Expresion errada en la expresion VALUES");
+                        
+                        resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[4] + "'" + ", Expresion errada en la expresion VALUES \n";
+                        
                     }
 
+                } else if (cadenaSeparada[3].endsWith("VALUES") && cadenaSeparada.length > 4) {
+                    
+                    if (verificarValores(cadenaSeparada[4])) {
+                            System.out.println(lineaActual +"La expresion es valida");
+                            columna = columna = columna + cadenaSeparada[4].length() + 1;
+                            resultado += lineaActual + " La expresion es valida \n";
+                        } else {
+                            resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[5] + "'" + ", Expresion errada en la expresion de los valores a insertar \n";
+                        }
+                    
                 } else {
-                    JOptionPane.showMessageDialog(null,lineaActual + "Expresion errada en las columnas de la table");
+                    resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[3] + "'" + ", Expresion errada en las columnas de la table \n";
                 }
 
             } else {
-                JOptionPane.showMessageDialog(null,lineaActual + "Expresion errada en el nombre de la tabla");
+                resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[2] + "'" + ", Expresion errada en el nombre de la tabla \n";
             }
         } else {
-            JOptionPane.showMessageDialog(null,lineaActual + "Expresion errada en la expresion INTO");
+            resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[1] + "'" + ", Expresion errada en la expresion INTO \n";
         }
     }
 
     public void delete(String[] cadenaSeparada) {
         if (cadenaSeparada[1].equals("FROM") && cadenaSeparada.length > 2) {
             System.out.println(lineaActual +"La expresión contiene FROM y hay algo después");
-
+            columna = columna = columna + cadenaSeparada[1].length() + 1;
+            
             if (verificarNombre(cadenaSeparada[2]) && cadenaSeparada.length > 3) {
                 System.out.println(lineaActual +"Hay algo más, la expresion no para aca");
-
+                columna = columna = columna + cadenaSeparada[2].length() + 1;
+                
                 if (cadenaSeparada[3].equals("WHERE") && cadenaSeparada.length > 4) {
                     System.out.println(lineaActual +"La expresión contiene WHERE y hay algo después");
-
+                    columna = columna = columna + cadenaSeparada[3].length() + 1;
+                    
                     if (cadenaSeparada.length > 5) {
                         cadenaSeparada[4] = cadenaSeparada[4] + cadenaSeparada[5];
                         System.out.println(lineaActual +"Concatene YEI");
                     }
 
-                    if (verificarCondicion(cadenaSeparada[4])) {
+                    if (verificarCondicion(cadenaSeparada[4]) && cadenaSeparada[4].contains(";")) {
                         System.out.println(lineaActual +"La expresion es valida");
-                        JOptionPane.showMessageDialog(null,lineaActual + "Expresion VALIDA");
+                        columna = columna = columna + cadenaSeparada[4].length() + 1;
+                        resultado += lineaActual + " La expresion es valida \n";
                     } else {
-                        JOptionPane.showMessageDialog(null, lineaActual +"La condicion NO ES VALIDA");
+                        resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[4] + "'" + ", La condicion NO ES VALIDA \n";
                     }
 
                 } else {
-                    JOptionPane.showMessageDialog(null,lineaActual + "La expresion no contiene WHERE o no tiene nada despues de este");
+                    resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[3] + "'" + ", La expresion no contiene WHERE o no tiene nada despues de este \n";
+
                 }
 
             } else if (verificarDeleteCorto(cadenaSeparada[2])) {
-                JOptionPane.showMessageDialog(null,lineaActual + "Expresion VALIDA");
+                resultado += lineaActual + " La expresion es valida \n";
             } else {
-                JOptionPane.showMessageDialog(null,lineaActual + "El nombre de la tabla no es valido o faltan mas datos...");
+
+                resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[2] + "'" + ", El nombre de la tabla no es valido o faltan mas datos... \n";
+
             }
 
         } else {
-            JOptionPane.showMessageDialog(null,lineaActual + "Expresion errada en la expresion FROM");
+            
+            resultado += lineaActual + " Columna: " + columna + " '" + cadenaSeparada[1] + "'" + ", Expresion errada en la expresion FROM \n";
+
         }
     }
 

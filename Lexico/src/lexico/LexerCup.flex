@@ -10,6 +10,7 @@ import java_cup.runtime.Symbol;
 %char
 L=[a-zA-Z_]+
 D=[0-9]+
+
 espacio=[ ,\t,\r,\n]+
 %{
     private Symbol symbol(int type, Object value){
@@ -32,12 +33,6 @@ espacio=[ ,\t,\r,\n]+
 
 /* Tipos de datos */
 ( int | varchar ) {return new Symbol(sym.T_dato, yychar, yyline, yytext());}
-
-/* Tipo de dato Int (Para el main) */
-( "int" ) {return new Symbol(sym.Int, yychar, yyline, yytext());}
-
-/* Tipo de dato String */
-( String ) {return new Symbol(sym.Cadena, yychar, yyline, yytext());}
 
 /* Palabra reservada INSERT */
 ( INSERT ) {return new Symbol(sym.INSERT, yychar, yyline, yytext());}
@@ -81,6 +76,9 @@ espacio=[ ,\t,\r,\n]+
 /* Palabra reservada TABLE */
 ( TABLE ) {return new Symbol(sym.TABLE, yychar, yyline, yytext());}
 
+/* Palabra reservada function */
+( function ) {return new Symbol(sym.function, yychar, yyline, yytext());}
+
 /* Operador Igual */
 ( "=" ) {return new Symbol(sym.Igual, yychar, yyline, yytext());}
 
@@ -93,20 +91,17 @@ espacio=[ ,\t,\r,\n]+
 /* Parentesis de cierre */
 ( ")" ) {return new Symbol(sym.Parentesis_c, yychar, yyline, yytext());}
 
-/* Coma */
-( "," ) {return new Symbol(sym.Coma, yychar, yyline, yytext());}
-
 /* Punto y coma */
 ( ";" ) {return new Symbol(sym.P_coma, yychar, yyline, yytext());}
 
 /* Identificador */
-{L}({L}|{D})* {return new Symbol(sym.Identificador, yychar, yyline, yytext());}
+{L}({L}|{D}) {return new Symbol(sym.Identificador, yychar, yyline, yytext());}
+
+/* Identificador procedure */
+( "@" ) {return new Symbol(sym.Id_procedure, yychar, yyline, yytext());}
 
 /* Datos */
-[(]+([']*[\w]+[']*[,]*)+[^,][)]+ {return new Symbol(sym.Datos, yychar, yyline, yytext());}
-
-/* Campo de la Tabla */
-[(]+([\w]+[,]*)+[^,][)]+ {return new Symbol(sym.CamposTabla, yychar, yyline, yytext());}
+[a-zA-Z_]+ | [0-9]+ {return new Symbol(sym.Datos, yychar, yyline, yytext());}
 
 /* Numero */
 ("(-"{D}+")")|{D}+ {return new Symbol(sym.Numero, yychar, yyline, yytext());}

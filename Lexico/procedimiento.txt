@@ -1,8 +1,16 @@
 CREATE PROCEDURE function @ContactName nvarchar(30), @City nvarchar(10)
 BEGIN
-CREATE TABLE Customers {CustomerId BigInt, ContactName varchar(30), City varchar(30)};
-UPDATE Customers ContactName='AlfredSchmidt',City='Frankfurt' WHERE CustomerID=1;
-INSERT INTO Customers (CustomerName, CustomerId) VALUES ('Cardinal','Comilla');
+UPDATE Customers SET ContactName='AlfredSchmidt',City='Frankfurt' WHERE CustomerID=1;
+INSERT INTO Customers (Uno) VALUES (1);
 DELETE FROM Customers WHERE CustomerName='Alfreds Futterkiste';
 SELECT Customers.A FROM Customers WHERE Customers.Id = 1;
+INSORT INTO Customers (Uno,Dos) VALUES (1,2);
+INSERT INTO Customers (Uno,Tres) VALUES (1,2,3);
+INSERT INT0 Customers (Uno,Dos,Tres,Cuatro) VALUES (1,2,3,4);
+INSERT INTO DELETE (Uno,Dos,Tres,Cuatro,Cinco) VALUES (1,2,3,4,5);
+DELETE FROM Customers WHERE CustomerName='Alfreds Futterkiste'
+DELETE FROM Customers;
+DELETE UPDATE Customers;
+UPDATE Customers ContactName='AlfredSchmidt',City='Frankfurt' WHERE CustomerID=1;
+SELECT * FROM Customers;
 END

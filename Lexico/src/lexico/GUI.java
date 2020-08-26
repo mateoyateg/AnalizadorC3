@@ -69,7 +69,7 @@ public class GUI implements ActionListener{
         
         //Propiedades de la ventana
         ventana.setSize(1265, 500);
-        ventana.setTitle("Analizador Léxico, Sintactico y Semantico");
+        ventana.setTitle("Analizador & Compilador - Ciencias III");
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.setLocationRelativeTo(null);
         ventana.setLayout(null);
@@ -96,7 +96,7 @@ public class GUI implements ActionListener{
         pa.setFont(new java.awt.Font("Cambria", 2, 11));
         
         //Elementos del panel
-        JLabel lbTitulo = new JLabel("Analizador Lexico, Sintactico y Semantico", SwingConstants.CENTER);
+        JLabel lbTitulo = new JLabel("Analizador & Compilador - Ciencias III", SwingConstants.CENTER);
         lbTitulo.setVisible(true);
         lbTitulo.setFont(new java.awt.Font("Cambria", 0, 29));
         pa.add(lbTitulo);
@@ -154,7 +154,7 @@ public class GUI implements ActionListener{
         scrollSintactico.setPreferredSize(new Dimension(300,320));
         pa.add(scrollSintactico);
         
-        taSemantico = new JTextArea();
+        /*taSemantico = new JTextArea();
         taSemantico.setEditable(false);
         taSemantico.setFont(new java.awt.Font("Cambria", 0, 15));
         taSemantico.setBorder(BorderFactory.createTitledBorder("Semantico"));
@@ -165,7 +165,7 @@ public class GUI implements ActionListener{
         scrollSemantico.setVerticalScrollBarPolicy( ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollSemantico.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollSemantico.setPreferredSize(new Dimension(300,320));
-        pa.add(scrollSemantico);
+        pa.add(scrollSemantico);*/
         
         return pa;
     }
@@ -299,23 +299,34 @@ public class GUI implements ActionListener{
             taProcedimiento.removeAll();
             taLexico.removeAll();
             taSintactico.removeAll();
-            taSemantico.removeAll();
+            //taSemantico.removeAll();
             resultadoSintactico = "";
 
             //Almacenar el procedimiento almacenado en un text area
             procedimientoAlmacenado = new ArrayList<String>();
             cargarArchivo();
             
-            
+            Sintactico sintax = new Sintactico();
             
             //Analizador sintactico
+            for(int i=0; i < procedimientoAlmacenado.size(); i++){
+
+                System.out.println("Linea por analizar: " + procedimientoAlmacenado.get(i) + ", numero de linea: " + i);
+                sintax.analizarLinea(procedimientoAlmacenado.get(i), i);
+
+            }
+            
+            taSintactico.setText(sintax.resultado);
+            
+            //Analizador simtactico - Jcup
+            
             for(int i=0; i < procedimientoAlmacenado.size(); i++){
                 System.out.println("Linea por analizar: " + procedimientoAlmacenado.get(i) + ", numero de linea: " + i);
                 Sintax s = new Sintax(new lexico.LexerCup(new StringReader(procedimientoAlmacenado.get(i))));
                 analizar(s,i);
             }
             
-            taSintactico.setText(resultadoSintactico);
+//            taSemantico.setText(resultadoSintactico);
             
             /*
 

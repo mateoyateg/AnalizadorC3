@@ -17,18 +17,22 @@ parser code
 
 terminal INSERT, DELETE, UPDATE, SELECT, CREATE, CREATE_PROCEDURE, BEGIN, END, INTO, VALUES,
     FROM, WHERE, SET, TABLE, Identificador, Parentesis_a, Parentesis_c, P_coma,
-    Coma, Int, Cadena, Numero, Datos, T_dato, Igual, Asterisco, Comillas, CamposTabla, ERROR;
+    Numero, Datos, T_dato, Igual, Asterisco, Comillas, function, Id_procedure, ERROR;
 non terminal SENTENCIA;
 
 SENTENCIA ::=
  
-    INSERT INTO Identificador Parentesis_a Identificador Parentesis_c VALUES Datos P_coma | 
+    INSERT INTO Identificador Parentesis_a Identificador Parentesis_c VALUES Parentesis_a Datos Parentesis_c P_coma |
+    INSERT INTO Identificador VALUES Parentesis_a Datos Parentesis_c P_coma |
     DELETE FROM Identificador WHERE Identificador Igual Datos P_coma |
     DELETE FROM Identificador P_coma | 
     UPDATE Identificador SET Identificador Igual Datos WHERE Identificador Igual Datos P_coma | 
     UPDATE Identificador SET Identificador Igual Datos P_coma | 
     SELECT Identificador FROM Identificador P_coma |
     SELECT Asterisco FROM Identificador P_coma |
-    CREATE TABLE Identificador Parentesis_a Identificador T_dato Parentesis_c P_coma 
+    CREATE TABLE Identificador Parentesis_a Identificador T_dato Parentesis_c P_coma |
+    CREATE_PROCEDURE function Id_procedure T_dato |
+    BEGIN |
+    END
 
 ;
