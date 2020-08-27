@@ -27,48 +27,47 @@ terminal INSERT, DELETE, UPDATE, SELECT, CREATE, CREATE_PROCEDURE, BEGIN, END, I
     Numero, Datos, T_dato, Igual, Asterisco, Comillas, function, Id_procedure, ERROR;
 
 non terminal QUERY,SENTENCIA, CLAUSULA_INTO, CLAUSULA_VALUES,
-             CLAUSULA_WHERE, CLAUSULA_FROM, CONDICIONES,TABLA, VALOR,TABLA_NODO,NOMBRE_TABLA,COLS, TBL, TABLA_NODO_NOMBRE;
+             CLAUSULA_WHERE, CLAUSULA_FROM, CONDICIONES,TABLA, VALOR,TABLA_NODO,NOMBRE_TABLA,COLS, TBL, TABLA_NODO_NOMBRE,VAL,COND,DESCRIP;
 
 start with SENTENCIA;
-//pendiente cluasula into clausual where clausula vales valor tablanodo
+
 QUERY ::= SENTENCIA: n1 {:
         Nodo nd = new Nodo();
         nd.setEtiqueta("SENTENCIA");
-        nd.setId(parser.cont);
+        nd.setIdNodo(parser.cont);
         parser.cont++;
-        nd.AddHijos((Nodo) n1);
+        nd.agregarHijos((Nodo) n1);
         parser.padre = (Nodo) nd;
         RESULT = nd;
     :};
 SENTENCIA ::= INSERT  CLAUSULA_INTO:n1 Parentesis_a VALOR:n2 Parentesis_c CLAUSULA_VALUES:n3 P_coma {:
         Nodo nd = new Nodo();
         nd.setEtiqueta("INSERT");
-        nd.setId(parser.cont);
+        nd.setIdNodo(parser.cont);
         parser.cont++;
-        nd.AddHijos((Nodo) n1);
-        nd.AddHijos((Nodo) n2);
-        nd.AddHijos((Nodo) n3);
+        nd.agregarHijos((Nodo) n1);
+        nd.agregarHijos((Nodo) n2);
+        nd.agregarHijos((Nodo) n3);
         parser.padre = (Nodo) nd;
         RESULT = nd;
     :};
 SENTENCIA ::= INSERT  CLAUSULA_INTO:n1 CLAUSULA_VALUES:n2  P_coma {:
         Nodo nd = new Nodo();
         nd.setEtiqueta("INSERT");
-        nd.setId(parser.cont);
+        nd.setIdNodo(parser.cont);
         parser.cont++;
-        nd.AddHijos((Nodo) n1);
-        nd.AddHijos((Nodo) n2);
-        nd.AddHijos((Nodo) n3);
+        nd.agregarHijos((Nodo) n1);
+        nd.agregarHijos((Nodo) n2);
         parser.padre = (Nodo) nd;
         RESULT = nd;
     :};
 
-SENTENCIA ::= SELECT asterisco CLAUSULA_FROM:n1 TABLA:n3 P_coma {:
+SENTENCIA ::= SELECT Asterisco CLAUSULA_FROM:n1 TABLA:n3 P_coma {:
         Nodo nd = new Nodo();
         nd.setEtiqueta("SELECT");
-        nd.setId(parser.cont);
+        nd.setIdNodo(parser.cont);
         parser.cont++;        
-        nd.AddHijos((Nodo) n1);
+        nd.agregarHijos((Nodo) n1);
         parser.padre = (Nodo) nd;
         RESULT = nd;
  :};
@@ -76,76 +75,74 @@ SENTENCIA ::= SELECT asterisco CLAUSULA_FROM:n1 TABLA:n3 P_coma {:
 SENTENCIA ::= SELECT VALOR:n1 CLAUSULA_FROM:n2 TABLA:n3 P_coma {:
         Nodo nd = new Nodo();
         nd.setEtiqueta("SELECT");
-        nd.setId(parser.cont);
+        nd.setIdNodo(parser.cont);
         parser.cont++;        
-        nd.AddHijos((Nodo) n1);
-        nd.AddHijos((Nodo) n2);
+        nd.agregarHijos((Nodo) n1);
+        nd.agregarHijos((Nodo) n2);
         parser.padre = (Nodo) nd;
         RESULT = nd;
 :};
-SENTENCIA ::= SELECT VALOR:n1 CLAUSULA_FROM:n2 TABLA:n3 CLAUSULA_WHERE:n4 CONDICION:n5 P_coma {:
+SENTENCIA ::= SELECT VALOR:n1 CLAUSULA_FROM:n2 TABLA:n3 CLAUSULA_WHERE:n4 CONDICIONES:n5 P_coma {:
         Nodo nd = new Nodo();
         nd.setEtiqueta("SELECT");
-        nd.setId(parser.cont);
+        nd.setIdNodo(parser.cont);
         parser.cont++;        
-        nd.AddHijos((Nodo) n1);
-        nd.AddHijos((Nodo) n2);
-        nd.AddHijos((Nodo) n4);
-        nd.AddHijos((Nodo) n5);
+        nd.agregarHijos((Nodo) n1);
+        nd.agregarHijos((Nodo) n2);
+        nd.agregarHijos((Nodo) n4);
+        nd.agregarHijos((Nodo) n5);
         parser.padre = (Nodo) nd;
         RESULT = nd;
 :};
 SENTENCIA ::= DELETE CLAUSULA_FROM:n1 TABLA:n2 P_coma {:
         Nodo nd = new Nodo();
         nd.setEtiqueta("DELETE");
-        nd.setId(parser.cont);
+        nd.setIdNodo(parser.cont);
         parser.cont++;        
-        nd.AddHijos((Nodo) n1);
+        nd.agregarHijos((Nodo) n1);
         parser.padre = (Nodo) nd;
         RESULT = nd;
 :};
-SENTENCIA ::= DELETE CLAUSULA_FROM:n1 TABLA:n2 CLAUSULA_WHERE:n3 CONDICION:n4 P_coma {:
+SENTENCIA ::= DELETE CLAUSULA_FROM:n1 TABLA:n2 CLAUSULA_WHERE:n3 CONDICIONES:n4 P_coma {:
         Nodo nd = new Nodo();
         nd.setEtiqueta("DELETE");
-        nd.setId(parser.cont);
+        nd.setIdNodo(parser.cont);
         parser.cont++;        
-        nd.AddHijos((Nodo) n1);
-        nd.AddHijos((Nodo) n3);
-        nd.AddHijos((Nodo) n4);
+        nd.agregarHijos((Nodo) n1);
+        nd.agregarHijos((Nodo) n3);
+        nd.agregarHijos((Nodo) n4);
         parser.padre = (Nodo) nd;
         RESULT = nd;
 :};
-SENTENCIA ::= UPDATE TABLA_NODO:n1 SET VALOR:n2 CLAUSULA_WHERE:n3 CONDICION:n4 P_coma{:
+SENTENCIA ::= UPDATE TABLA_NODO:n1 SET VALOR:n2 CLAUSULA_WHERE:n3 CONDICIONES:n4 P_coma{:
         Nodo nd = new Nodo();
         nd.setEtiqueta("UPDATE");
-        nd.setId(parser.cont);
+        nd.setIdNodo(parser.cont);
         parser.cont++;        
-        nd.AddHijos((Nodo) n1);
-        nd.AddHijos((Nodo) n2);
-        nd.AddHijos((Nodo) n3);
-        nd.AddHijos((Nodo) n4);
+        nd.agregarHijos((Nodo) n1);
+        nd.agregarHijos((Nodo) n2);
+        nd.agregarHijos((Nodo) n3);
+        nd.agregarHijos((Nodo) n4);
         parser.padre = (Nodo) nd;
         RESULT = nd;
 :};
 SENTENCIA ::= UPDATE TABLA_NODO:n1 SET VALOR:n2 P_coma{:
         Nodo nd = new Nodo();
         nd.setEtiqueta("UPDATE");
-        nd.setId(parser.cont);
+        nd.setIdNodo(parser.cont);
         parser.cont++;        
-        nd.AddHijos((Nodo) n1);
-        nd.AddHijos((Nodo) n2);
-        nd.AddHijos((Nodo) n3);
-        nd.AddHijos((Nodo) n4);
+        nd.agregarHijos((Nodo) n1);
+        nd.agregarHijos((Nodo) n2);
         parser.padre = (Nodo) nd;
         RESULT = nd;
 :};    
 SENTENCIA ::= CREATE TABLE TABLA_NODO:n1 Parentesis_a VALOR:n2 Parentesis_c P_coma{:
         Nodo nd = new Nodo();
         nd.setEtiqueta("CREATE");
-        nd.setId(parser.cont);
+        nd.setIdNodo(parser.cont);
         parser.cont++;        
-        nd.AddHijos((Nodo) n1);
-        nd.AddHijos((Nodo) n2);
+        nd.agregarHijos((Nodo) n1);
+        nd.agregarHijos((Nodo) n2);
         parser.padre = (Nodo) nd;
         RESULT = nd;
 :};  
@@ -153,11 +150,11 @@ SENTENCIA ::= CREATE TABLE TABLA_NODO:n1 Parentesis_a VALOR:n2 Parentesis_c P_co
 CLAUSULA_VALUES ::= VALUES Parentesis_a COLS:n1 Parentesis_c {:
         Nodo nd = new Nodo();
         nd.setEtiqueta("VALUES");
-        nd.setId(parser.cont);
+        nd.setIdNodo(parser.cont);
         parser.cont++;
-        String st = n1;
+        String st = (String) n1;
         String []cols = st.split(",");
-        for(String s:st) {
+        for(String s:cols) {
             nd.setValor(s);
         };
         parser.padre = (Nodo) nd;
@@ -167,9 +164,9 @@ CLAUSULA_VALUES ::= VALUES Parentesis_a COLS:n1 Parentesis_c {:
 CLAUSULA_INTO ::= INTO NOMBRE_TABLA:n1 {:
         Nodo nd = new Nodo();
         nd.setEtiqueta("INTO");
-        nd.setId(parser.cont);
+        nd.setIdNodo(parser.cont);
         parser.cont++;
-        String st = n1;
+        String st = (String) n1;
         nd.setValor(st);
         parser.padre = (Nodo) nd;
         RESULT = nd;
@@ -178,12 +175,12 @@ CLAUSULA_INTO ::= INTO NOMBRE_TABLA:n1 {:
 VALOR ::= VAL:n1 {:
         Nodo nd = new Nodo();
         nd.setEtiqueta("COLS");
-        nd.setId(parser.cont);
+        nd.setIdNodo(parser.cont);
         parser.cont++;
-        String st = n1;
+        String st = (String) n1;
         String []cols = st.split(",");
-        for(String s:st) {
-            nd.setValor(s)
+        for(String s:cols) {
+            nd.setValor(s);
         };
         parser.padre = (Nodo) nd;
         RESULT = nd;
@@ -192,43 +189,45 @@ VALOR ::= VAL:n1 {:
 CLAUSULA_FROM ::= FROM TBL:n1 {:
         Nodo nd = new Nodo();
         nd.setEtiqueta("FROM");
-        nd.setId(parser.cont);
-        String st = n1;
+        nd.setIdNodo(parser.cont);
+        String st = (String) n1;
         nd.setValor(st);
         parser.cont++;
         parser.padre = (Nodo) nd;
         RESULT = nd;
 :};
 
-TABLA_NODO :: == TABLA_NODO_NOMBRE:n1 {:
+TABLA_NODO ::= TABLA_NODO_NOMBRE:n1 {:
         Nodo nd = new Nodo();
         nd.setEtiqueta("TABLA");
-        nd.setId(parser.cont);
-        String st = n1;
+        nd.setIdNodo(parser.cont);
+        String st = (String) n1;
         nd.setValor(st);
         parser.cont++;
         parser.padre = (Nodo) nd;
         RESULT = nd;   
 :};
 
-COND :: == DESRIP:n1 {:
+COND ::= DESCRIP:n1 {:
         Nodo nd = new Nodo();
         nd.setEtiqueta("ATRIBUTO");
-        nd.setId(parser.cont);
-        String st = n1;
+        nd.setIdNodo(parser.cont);
+        String st = (String) n1;
         nd.setValor(st);
         parser.cont++;
         parser.padre = (Nodo) nd;
         RESULT = nd;   
 :};
 
-CONDICION :: == COND:n1 Igual COND:n2 {:
+        
+
+CONDICIONES ::= COND:n1 Igual COND:n2 {:
         Nodo nd = new Nodo();
         nd.setEtiqueta("=");
-        nd.setId(parser.cont);
+        nd.setIdNodo(parser.cont);
         parser.cont++;        
-        nd.AddHijos((Nodo) n1);
-        nd.AddHijos((Nodo) n2);
+        nd.agregarHijos((Nodo) n1);
+        nd.agregarHijos((Nodo) n2);
         parser.padre = (Nodo) nd;
         RESULT = nd;   
 :};

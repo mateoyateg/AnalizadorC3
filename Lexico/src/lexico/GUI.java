@@ -23,6 +23,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java_cup.parser;
 import java_cup.runtime.Symbol;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -36,6 +37,8 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
+import lexico.Nodo;
+import sintactico.ArbolAST;
 import sintactico.Sintactico;
 
 /**
@@ -276,9 +279,14 @@ public class GUI implements ActionListener{
     public void analizar(Sintax s, int linea){
         
         try {
-            s.parse();
+             s.parse();
             System.out.println("Linea: " + linea + ": Analisis realizado correctamente");
             resultadoSintactico += "Analisis realizado correctamente \n";
+            Nodo raiz =  s.padre;
+            ArbolAST arbol = new ArbolAST();
+            arbol.Graficar(arbol.recorrido(raiz),"AST_PROYECTO");
+            
+            
 
         } catch (Exception ex) {
             Symbol sym = s.getS();

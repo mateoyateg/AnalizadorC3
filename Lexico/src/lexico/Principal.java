@@ -1,5 +1,11 @@
 package lexico;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -17,9 +23,9 @@ public class Principal {
         
         GUI GU = new GUI();
         
+
     }
     
-    
-    
+     
     
 }
